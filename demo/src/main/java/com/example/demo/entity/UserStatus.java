@@ -1,8 +1,8 @@
 package com.example.demo.entity;
 
 public enum UserStatus {
-    ACTIVE("ACTIVE", "Hoạt động"),
-    INACTIVE("INACTIVE", "Không hoạt động");
+    ACTIVE("ACTIVE", "Active"),
+    INACTIVE("INACTIVE", "Inactive");
     
     private final String code;
     private final String description;
