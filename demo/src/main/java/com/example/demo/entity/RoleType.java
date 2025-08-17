@@ -1,9 +1,9 @@
 package com.example.demo.entity;
 
 public enum RoleType {
-    ADMIN("ADMIN", "Quản trị viên"),
-    LIBRARIAN("LIBRARIAN", "Thủ thư"),
-    USER("USER", "Người dùng");
+    ADMIN("ADMIN", "Administrator"),
+    LIBRARIAN("LIBRARIAN", "Librarian"),
+    USER("USER", "User");
     
     private final String code;
     private final String description;
