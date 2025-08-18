@@ -9,13 +9,11 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorResponse {
-    private Long id;
+public class AuthorUpdateRequest {
     private String name;
-
     private String biography;
-
     private LocalDate birthDate;
-
     private String nationality;
 }
+
+

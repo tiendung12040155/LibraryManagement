@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 public class AuthorCreateRequest {
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Name is required")
     private String name;
 
     private String biography;
