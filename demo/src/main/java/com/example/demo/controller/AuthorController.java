@@ -2,15 +2,17 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AuthorCreateRequest;
 import com.example.demo.dto.AuthorResponse;
+import com.example.demo.dto.AuthorUpdateRequest;
 import com.example.demo.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(name = "api/author")
+@RequestMapping("/api/authors")
 public class AuthorController {
     private final AuthorService authorService;
 
@@ -18,21 +20,21 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createAuthor(@RequestBody AuthorCreateRequest request) {
+    @PostMapping
+    public ResponseEntity<AuthorResponse> createAuthor(@Valid @RequestBody AuthorCreateRequest request) {
         AuthorResponse response = authorService.createAuthor(request);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/edit/{id}")
-    public ResponseEntity<?> updateAuthor(@PathVariable Long id, @RequestBody AuthorCreateRequest request) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<AuthorResponse> updateAuthor(@PathVariable Long id, @RequestBody AuthorUpdateRequest request) {
         AuthorResponse response = authorService.updateAuthor(id, request);
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<AuthorResponse>> getAllAuthor() {
-        List<AuthorResponse> responseList = authorService.getAllAuthor();
+    @GetMapping
+    public ResponseEntity<List<AuthorResponse>> getAllAuthors() {
+        List<AuthorResponse> responseList = authorService.getAllAuthors();
         return new ResponseEntity<>(responseList, HttpStatus.OK);
     }
 

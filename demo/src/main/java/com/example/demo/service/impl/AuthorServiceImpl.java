@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.AuthorCreateRequest;
 import com.example.demo.dto.AuthorResponse;
+import com.example.demo.dto.AuthorUpdateRequest;
 import com.example.demo.entity.Author;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AuthorRepository;
@@ -28,30 +29,37 @@ public class AuthorServiceImpl implements AuthorService {
         author.setNationality(request.getNationality());
         authorRepository.save(author);
 
-        return new AuthorResponse(author.getName(), author.getBiography(), author.getBirthDate(), author.getNationality());
+        return toAuthorResponse(author);
     }
 
     @Override
-    public AuthorResponse updateAuthor(Long id, AuthorCreateRequest request) {
+    public AuthorResponse updateAuthor(Long id, AuthorUpdateRequest request) {
         //validate id
         Author author = authorRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Not found author!!!!"));
         //edit author
-        author.setName(request.getName());
-        author.setBiography(request.getBiography());
-        author.setBirthDate(request.getBirthDate());
-        author.setNationality(request.getNationality());
+        if (request.getName() != null) {
+            author.setName(request.getName());
+        }
+        if (request.getBiography() != null) {
+            author.setBiography(request.getBiography());
+        }
+        if (request.getBirthDate() != null) {
+            author.setBirthDate(request.getBirthDate());
+        }
+        if (request.getNationality() != null) {
+            author.setNationality(request.getNationality());
+        }
 
         authorRepository.save(author);
 
-        return new AuthorResponse(author.getName(), author.getBiography(), author.getBirthDate(), author.getNationality());
+        return toAuthorResponse(author);
     }
 
     @Override
-    public List<AuthorResponse> getAllAuthor() {
+    public List<AuthorResponse> getAllAuthors() {
         List<Author> listFound = authorRepository.findAll();
-        List<AuthorResponse> responseList = listFound.stream().map(a ->
-                new AuthorResponse(a.getName(), a.getBiography(), a.getBirthDate(), a.getNationality())).toList();
+        List<AuthorResponse> responseList = listFound.stream().map(this::toAuthorResponse).toList();
         return responseList;
     }
 
@@ -60,6 +68,16 @@ public class AuthorServiceImpl implements AuthorService {
         //validate id
         Author author = authorRepository.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Not found author!!!!"));
-        return new AuthorResponse(author.getName(), author.getBiography(), author.getBirthDate(), author.getNationality());
+        return toAuthorResponse(author);
+    }
+
+    private AuthorResponse toAuthorResponse(Author author) {
+        return new AuthorResponse(
+                author.getId(),
+                author.getName(),
+                author.getBiography(),
+                author.getBirthDate(),
+                author.getNationality()
+        );
     }
 }
