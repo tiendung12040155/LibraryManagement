@@ -6,6 +6,7 @@ import com.example.demo.dto.AuthorUpdateRequest;
 import com.example.demo.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -21,12 +22,14 @@ public class AuthorController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<AuthorResponse> createAuthor(@Valid @RequestBody AuthorCreateRequest request) {
         AuthorResponse response = authorService.createAuthor(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<AuthorResponse> updateAuthor(@PathVariable Long id, @RequestBody AuthorUpdateRequest request) {
         AuthorResponse response = authorService.updateAuthor(id, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
