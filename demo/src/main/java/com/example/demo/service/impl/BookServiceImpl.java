@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.BookCreateRequest;
 import com.example.demo.dto.BookResponse;
 import com.example.demo.dto.BookUpdateRequest;
+import com.example.demo.dto.BorrowedBookResponse;
 import com.example.demo.entity.Author;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.Category;
@@ -116,7 +117,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public BookResponse getBookById(Long id) {
         Book book = bookRepository.findByIdWithAuthorAndCategories(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book", "id", id));
@@ -124,10 +124,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<BookResponse> getAllBooks() {
         List<Book> books = bookRepository.findAll();
         return books.stream().map(this::toBookResponse).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BorrowedBookResponse> getBooksByBorrowerId(Long borrowerId) {
+        List<Book> books = bookRepository.findByBorrowerIdWithAuthorAndCategories(borrowerId);
+        return books.stream()
+                .map(BorrowedBookResponse::toListBookBorrow)
+                .collect(Collectors.toList());
     }
 
     private BookResponse toBookResponse(Book book) {
@@ -152,6 +159,8 @@ public class BookServiceImpl implements BookService {
         }
         return response;
     }
+
+
 }
 
 

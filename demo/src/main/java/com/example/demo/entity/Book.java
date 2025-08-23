@@ -43,6 +43,9 @@ public class Book {
     
     @Column(name = "language", length = 50)
     private String language;
+
+    @Column(name = "borrowerId")
+    private Long borrowerId;
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
