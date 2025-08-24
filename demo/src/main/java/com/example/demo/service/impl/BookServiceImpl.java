@@ -1,9 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.BookCreateRequest;
-import com.example.demo.dto.BookResponse;
-import com.example.demo.dto.BookUpdateRequest;
-import com.example.demo.dto.BorrowedBookResponse;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Author;
 import com.example.demo.entity.Book;
 import com.example.demo.entity.Category;
@@ -12,13 +9,13 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AuthorRepository;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.repository.CategoryRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.BookService;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +25,13 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
-    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, CategoryRepository categoryRepository) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorRepository authorRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -136,6 +135,50 @@ public class BookServiceImpl implements BookService {
                 .map(BorrowedBookResponse::toListBookBorrow)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public BorrowBookResponse borrowBook(BorrowBookRequest request) {
+        //validate userId
+        validateBorrowerId(request.getBorrowerId());
+        //validate bookIds
+        List<Book> listBooks = validateListBookIds(request.getListBookIds());
+
+        //set borrowerId
+        listBooks.forEach(book -> book.setBorrowerId(request.getBorrowerId()));
+        bookRepository.saveAll(listBooks);
+
+        return new BorrowBookResponse(request.getBorrowerId(), "Borrow successful!!!!");
+    }
+
+    private void validateBorrowerId(Long borrowerId) {
+        userRepository.findById(borrowerId).orElseThrow(() ->
+                new ResourceNotFoundException("Not Found User have id: " + borrowerId));
+    }
+
+    private List<Book> validateListBookIds(List<Long> listBookIds) {
+        Set<Long> ids = new HashSet<>();
+        //check duplicate
+        for (Long listBookId : listBookIds) {
+            if (!ids.add(listBookId)) {
+                throw new DuplicateResourceException("Duplicate id!!!!");
+            }
+        }
+
+        //check exits in db
+        List<Book> listBooks = bookRepository.findByListBookIds(ids).orElseThrow(() ->
+                new ResourceNotFoundException("Not found Book !!!"));
+        if (listBooks.size() != ids.size()) {
+            throw new ResourceNotFoundException("One of the Books not exits!!!");
+        }
+
+        //check borrowerId is null or not
+        if (listBooks.stream().anyMatch(book -> book.getBorrowerId() != null)) {
+            throw new ResourceNotFoundException("One of the Books have borrow!!!");
+        }
+
+        return listBooks;
+    }
+
 
     private BookResponse toBookResponse(Book book) {
         BookResponse response = new BookResponse();

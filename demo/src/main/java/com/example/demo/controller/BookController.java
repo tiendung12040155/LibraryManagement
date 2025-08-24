@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BookCreateRequest;
-import com.example.demo.dto.BookResponse;
-import com.example.demo.dto.BookUpdateRequest;
+import com.example.demo.dto.*;
 import com.example.demo.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -51,9 +49,16 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+    public ResponseEntity<?> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
+    public ResponseEntity<BorrowBookResponse> borrowBook(@RequestBody BorrowBookRequest request) {
+        BorrowBookResponse response = bookService.borrowBook(request);
+        return ResponseEntity.ok(response);
     }
 }
 
