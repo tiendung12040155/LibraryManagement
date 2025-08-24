@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.BookCreateRequest;
-import com.example.demo.dto.BookResponse;
-import com.example.demo.dto.BookUpdateRequest;
-import com.example.demo.dto.BorrowedBookResponse;
+import com.example.demo.dto.*;
 
 import java.util.List;
 
@@ -24,6 +21,8 @@ public interface BookService {
      * @return List of borrowed books
      */
     List<BorrowedBookResponse> getBooksByBorrowerId(Long borrowerId);
+
+    BorrowBookResponse borrowBook(BorrowBookRequest request);
 }
 
 
