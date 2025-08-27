@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.BorrowedBookResponse;
+import com.example.demo.dto.SearchUserRequest;
 import com.example.demo.dto.UserProfileRequest;
 import com.example.demo.dto.UserProfileResponse;
 import com.example.demo.service.BookService;
@@ -58,5 +59,12 @@ public class UserController {
     public ResponseEntity<List<BorrowedBookResponse>> getBorrowedBooksByUserId(@PathVariable Long userId) {
         List<BorrowedBookResponse> borrowedBooks = bookService.getBooksByBorrowerId(userId);
         return ResponseEntity.ok(borrowedBooks);
+    }
+
+    @GetMapping("/search-user")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LIBRARIAN')")
+    public ResponseEntity<List<UserProfileResponse>> searchUsers (SearchUserRequest request){
+        List<UserProfileResponse> responses = userService.searchUsers(request);
+        return ResponseEntity.ok(responses);
     }
 }
