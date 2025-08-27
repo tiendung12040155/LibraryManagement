@@ -23,6 +23,8 @@ public interface BookService {
     List<BorrowedBookResponse> getBooksByBorrowerId(Long borrowerId);
 
     BorrowBookResponse borrowBook(BorrowBookRequest request);
+
+    BorrowBookResponse returnBook(BorrowBookRequest request);
 }
 
 

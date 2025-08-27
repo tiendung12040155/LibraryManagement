@@ -21,7 +21,7 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<AuthorResponse> createAuthor(@Valid @RequestBody AuthorCreateRequest request) {
         AuthorResponse response = authorService.createAuthor(request);
@@ -35,7 +35,7 @@ public class AuthorController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<AuthorResponse>> getAllAuthors() {
         List<AuthorResponse> responseList = authorService.getAllAuthors();
         return new ResponseEntity<>(responseList, HttpStatus.OK);

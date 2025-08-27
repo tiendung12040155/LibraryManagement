@@ -33,7 +33,7 @@ public class BookController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    @PostMapping("/createBook")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookCreateRequest request) {
         BookResponse created = bookService.createBook(request);
@@ -54,10 +54,17 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/borrowBook")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<BorrowBookResponse> borrowBook(@RequestBody BorrowBookRequest request) {
         BorrowBookResponse response = bookService.borrowBook(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/returnBook")
+    @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
+    public ResponseEntity<BorrowBookResponse> returnBook(@RequestBody BorrowBookRequest request) {
+        BorrowBookResponse response = bookService.returnBook(request);
         return ResponseEntity.ok(response);
     }
 }
