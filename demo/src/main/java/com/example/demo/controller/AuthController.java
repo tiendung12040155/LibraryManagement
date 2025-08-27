@@ -28,10 +28,4 @@ public class AuthController {
         AuthResponse response = authService.registerUser(registerRequest);
         return ResponseEntity.ok(response);
     }
-    
-    @PostMapping("/init-roles")
-    public ResponseEntity<?> initializeRoles() {
-        authService.initializeRoles();
-        return ResponseEntity.ok("Roles initialized successfully");
-    }
 }
