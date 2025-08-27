@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.SearchUserRequest;
 import com.example.demo.dto.UserProfileRequest;
 import com.example.demo.dto.UserProfileResponse;
 import com.example.demo.entity.User;
@@ -10,6 +11,8 @@ import com.example.demo.utils.UserUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,6 +43,11 @@ public class UserServiceImpl implements UserService {
         user.setPosition(request.getPosition());
         userRepository.save(user);
         return toDto(user);
+    }
+
+    @Override
+    public List<UserProfileResponse> searchUsers(SearchUserRequest request) {
+        return userRepository.searchUsers(request.getFullName(), request.getAddress());
     }
 
     /**
