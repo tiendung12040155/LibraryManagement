@@ -150,6 +150,21 @@ public class BookServiceImpl implements BookService {
         return new BorrowBookResponse(request.getBorrowerId(), "Borrow successful!!!!");
     }
 
+    @Override
+    public BorrowBookResponse returnBook(BorrowBookRequest request) {
+        //validate userId
+        validateBorrowerId(request.getBorrowerId());
+
+        //validate bookIds
+        List<Book> listBooks = validateListBookIds(request.getListBookIds());
+
+        //set borrowerId
+        listBooks.forEach(book -> book.setBorrowerId(null));
+        bookRepository.saveAll(listBooks);
+        return new BorrowBookResponse(request.getBorrowerId(), "Return successful!!!!");
+    }
+
+
     private void validateBorrowerId(Long borrowerId) {
         userRepository.findById(borrowerId).orElseThrow(() ->
                 new ResourceNotFoundException("Not Found User have id: " + borrowerId));
