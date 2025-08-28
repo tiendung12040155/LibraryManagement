@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Implementation of UserService for user operations
+ */
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
