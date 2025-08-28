@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.BookCreateRequest;
-import com.example.demo.dto.BookResponse;
-import com.example.demo.dto.BookUpdateRequest;
+import com.example.demo.dto.*;
 import com.example.demo.service.BookService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,16 +21,32 @@ public class BookController {
         this.bookService = bookService;
     }
 
+    /**
+     * Get all books
+     * @return list of all books
+     */
     @GetMapping
     public ResponseEntity<List<BookResponse>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
+        List<BookResponse> responses = bookService.getAllBooks();
+        return ResponseEntity.ok(responses);
     }
 
+    /**
+     * Get book by ID
+     * @param id book ID
+     * @return book details
+     */
     @GetMapping("/{id}")
     public ResponseEntity<BookResponse> getBookById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.getBookById(id));
+        BookResponse response = bookService.getBookById(id);
+        return ResponseEntity.ok(response);
     }
 
+    /**
+     * Create a new book
+     * @param request book creation data
+     * @return created book details
+     */
     @PostMapping
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<BookResponse> createBook(@Valid @RequestBody BookCreateRequest request) {
@@ -40,18 +54,53 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    /**
+     * Update an existing book
+     * @param id book ID
+     * @param request book update data
+     * @return updated book details
+     */
     @PatchMapping("/{id}")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
-    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @RequestBody BookUpdateRequest request) {
+    public ResponseEntity<BookResponse> updateBook(@PathVariable Long id, @Valid @RequestBody BookUpdateRequest request) {
         BookResponse updated = bookService.updateBook(id, request);
         return ResponseEntity.ok(updated);
     }
 
+    /**
+     * Delete a book
+     * @param id book ID
+     * @return no content response
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Borrow a book
+     * @param request borrow book request data
+     * @return borrow operation result
+     */
+    @PatchMapping("/borrow")
+    @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
+    public ResponseEntity<BorrowBookResponse> borrowBook(@Valid @RequestBody BorrowBookRequest request) {
+        BorrowBookResponse response = bookService.borrowBook(request);
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Return a book
+     * @param request return book request data
+     * @return return operation result
+     */
+    @PatchMapping("/return")
+    @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
+    public ResponseEntity<BorrowBookResponse> returnBook(@Valid @RequestBody BorrowBookRequest request) {
+        BorrowBookResponse response = bookService.returnBook(request);
+        return ResponseEntity.ok(response);
     }
 }
 

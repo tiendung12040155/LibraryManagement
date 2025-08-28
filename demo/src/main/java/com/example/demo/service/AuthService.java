@@ -4,6 +4,9 @@ import com.example.demo.dto.AuthResponse;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.RegisterRequest;
 
+/**
+ * Service interface for authentication operations
+ */
 public interface AuthService {
     
     /**

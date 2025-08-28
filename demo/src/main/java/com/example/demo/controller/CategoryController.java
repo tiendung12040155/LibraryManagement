@@ -5,7 +5,6 @@ import com.example.demo.dto.CategoryResponse;
 import com.example.demo.dto.CategoryUpdateRequest;
 import com.example.demo.service.CategoryService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,18 +23,32 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    /**
+     * Get all categories
+     * @return list of all categories
+     */
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAllCategories() {
         List<CategoryResponse> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
     
+    /**
+     * Get category by ID
+     * @param id category ID
+     * @return category details
+     */
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
         CategoryResponse category = categoryService.getCategoryById(id);
         return ResponseEntity.ok(category);
     }
     
+    /**
+     * Create a new category
+     * @param request category creation data
+     * @return created category details
+     */
     @PostMapping
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryCreateRequest request) {
@@ -43,6 +56,12 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
     }
     
+    /**
+     * Update an existing category
+     * @param id category ID
+     * @param request category update data
+     * @return updated category details
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<CategoryResponse> updateCategory(
@@ -52,6 +71,11 @@ public class CategoryController {
         return ResponseEntity.ok(updatedCategory);
     }
     
+    /**
+     * Delete a category
+     * @param id category ID
+     * @return no content response
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('LIBRARIAN') or hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
@@ -59,6 +83,11 @@ public class CategoryController {
         return ResponseEntity.noContent().build();
     }
     
+    /**
+     * Search categories by name
+     * @param name category name to search
+     * @return list of categories matching the name
+     */
     @GetMapping("/search")
     public ResponseEntity<List<CategoryResponse>> searchCategoriesByName(@RequestParam String name) {
         List<CategoryResponse> categories = categoryService.searchCategoriesByName(name);

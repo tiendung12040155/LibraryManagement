@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of CategoryService for category operations
+ */
 @Service
 @Transactional
 public class CategoryServiceImpl implements CategoryService {
