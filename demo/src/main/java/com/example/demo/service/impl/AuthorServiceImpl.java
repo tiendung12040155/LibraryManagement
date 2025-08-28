@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implementation of AuthorService for author operations
+ */
 @Service
 public class AuthorServiceImpl implements AuthorService {
 

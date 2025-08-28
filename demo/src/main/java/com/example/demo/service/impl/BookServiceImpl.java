@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of BookService for book operations
+ */
 @Service
 @Transactional
 public class BookServiceImpl implements BookService {
